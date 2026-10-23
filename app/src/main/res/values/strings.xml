@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gemini PDF Translator</string>
+    <string name="app_ready">Gemini 300-Page PDF Translator is configured.</string>
+    <string name="notification_title">Translating PDF</string>
+    <string name="notification_text">Processed %1$d of %2$d chunks</string>
+</resources>
