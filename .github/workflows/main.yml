@@ -27,12 +27,14 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          if [ -f "build.gradle.kts" ] || [ -f "build.gradle" ]; then
-            gradle assembleDebug --stacktrace
-          else
-            cd */ 2>/dev/null || true
-            gradle assembleDebug --stacktrace
+          set -euo pipefail
+          ASSEMBLE_TASK=$(gradle tasks --all --console=plain | sed -n 's/^\([[:alnum:]_:-]*assembleDebug\) - .*/\1/p' | head -n 1)
+          if [ -z "$ASSEMBLE_TASK" ]; then
+            echo "No assembleDebug task found; skipping APK build."
+            exit 0
           fi
+          echo "Running Gradle task: $ASSEMBLE_TASK"
+          gradle "$ASSEMBLE_TASK" --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
