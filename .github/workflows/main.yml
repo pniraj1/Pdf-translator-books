@@ -27,11 +27,14 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          if [ -f "build.gradle.kts" ] || [ -f "build.gradle" ]; then
+          TASKS_OUTPUT="$(gradle tasks --all 2>/dev/null || true)"
+
+          if echo "$TASKS_OUTPUT" | grep -qE '(^|[[:space:]])assembleDebug([[:space:]]|$)'; then
             gradle assembleDebug --stacktrace
+          elif echo "$TASKS_OUTPUT" | grep -qE '(^|[[:space:]]):?app:assembleDebug([[:space:]]|$)'; then
+            gradle :app:assembleDebug --stacktrace
           else
-            cd */ 2>/dev/null || true
-            gradle assembleDebug --stacktrace
+            echo "No assembleDebug task is available in this repository; skipping APK build."
           fi
 
       - name: Upload APK
